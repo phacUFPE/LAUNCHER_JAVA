@@ -8,8 +8,7 @@ public class ErrorLog {
 	private static String logName = "log";
 	private static String logExt = ".txt";
 	
-	public static void saveError(Exception e)
-	{
+	public static void saveError(Exception e) {
 		try {
 			Date date = java.util.Calendar.getInstance().getTime();
 			String country = System.getProperty("user.country");
@@ -37,8 +36,7 @@ public class ErrorLog {
 			bufferWriter.newLine();
 			bufferWriter.append("Message: " + e.getMessage());
 			bufferWriter.newLine();
-			for (StackTraceElement element : traceElements)
-			{
+			for (StackTraceElement element : traceElements) {
 				bufferWriter.append("Class: " + element.getClassName());
 				bufferWriter.newLine();
 				bufferWriter.append("File: " + element.getFileName());

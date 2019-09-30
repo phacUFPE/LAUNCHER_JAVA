@@ -7,13 +7,11 @@ import java.util.regex.*;
 
 public class Version {
 	
-	public static boolean compareSL(String sVer, String lVer)
-	{
+	public static boolean compareSL(String sVer, String lVer) {
 		return (sVer.compareTo(lVer) == 0);
 	}
 	
-	public static String getServer(String webAddr, String fName, String sMatch)
-	{
+	public static String getServer(String webAddr, String fName, String sMatch) {
 		MatchResult result = null;
 		try {
 		   URL url = new URL(webAddr + fName);
@@ -21,8 +19,7 @@ public class Version {
 		   
 		   String text = "";
 		   
-		   while (s.hasNextLine())
-		   {
+		   while (s.hasNextLine()) {
 			   text += s.nextLine() + "\n";
 		   }
 		   s.close();
@@ -40,19 +37,17 @@ public class Version {
 		return result.group(1);
 	}
 	
-	public static String getLocal(String dir, String fName)
-	{
+	public static String getLocal(String fName) {
 		MatchResult result = null;
 		
 	    try {
-	    	File config = new File(String.format("%s\\%s", dir, fName));
+	    	File config = new File(String.format("%s\\%s", MainWindow.rootDir, fName));
 	    	
 	        Scanner s = new Scanner(config);
 
 	        String text = "";
 			   
-			while (s.hasNextLine())
-			{
+			while (s.hasNextLine()) {
 				text += s.nextLine() + "\n";
 			}		
 			s.close();
