@@ -7,7 +7,7 @@ public class Hash {
 	
 	public boolean compareHash(String h1, String h2)
 	{
-		return (h1 == h2) ? true : false; 
+		return (h1 == h2);
 	}
 	
 	public String getHash(String path)
