@@ -50,7 +50,7 @@ public class MainWindow {
 		initialize();
 		serverVer = Version.getServer(webAddress, fileVersion, "current_ver");
 		serverMinVer = Version.getServer(webAddress, fileVersion, "min_ver");
-		localVer = Version.getLocal(rootDir, fileConfig);
+		localVer = Version.getLocal(fileConfig);
 		
 		lblServerVer.setText(String.format("Server Ver: %s", serverVer));
 		lblClientVer.setText(String.format("Client Ver: %s", localVer));
@@ -62,7 +62,6 @@ public class MainWindow {
 			} catch (Exception e) {
 				ErrorLog.saveError(e);
 			}
-			
 		} else {
 			
 		}
