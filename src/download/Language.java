@@ -1,44 +1,61 @@
 package download;
 
 import java.io.File;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Scanner;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Language {
-	public static HashSet<HashSet<String>> loadLanguages(String fName) {
-		
-		MatchResult result = null;
-		
-		HashSet<String> languagesHSet = new HashSet<String>();
+	public static HashMap<HashMap<String, String>, String> loadLanguages() {
+
+		HashMap<String, String> hMapLang = new HashMap<String, String>();
+		HashMap<String, HashMap<String, String>> hMapLoc = new HashMap<String, HashMap<String, String>>();
 		
 		try {
-			File languages = new File(String.format("%s//%s", MainWindow.rootDir, fName));
 			
-			Scanner s = new Scanner(languages);
+			final File folder = new File(String.format("%s//%s", MainWindow.rootDir, MainWindow.langFolder));
 			
-			String text = "";
+			for (final File file : folder.listFiles()) {
+				
+				String tempName = file.getName();
+				
+				if (file.isFile() && tempName.contains(MainWindow.extLang)) {
 			
-			while (s.hasNextLine()) {
-				text += s.nextLine() + "\n";
-			}
-			s.close();
+					File languages = new File(String.format("%s//%s//%s", MainWindow.rootDir, MainWindow.langFolder, file.getName()));
 			
-			Pattern pat = Pattern.compile("(.*)=(.*)");
-			Matcher mat = pat.matcher(text);
-			if (mat.find()) {
-				result = mat.toMatchResult();
-			}
+					Scanner s = new Scanner(languages);
 			
-			for (int i = 0; i < result.groupCount(); i++) {
-				languagesHSet.add(result.group(i));
+					String text = "";
+			
+					while (s.hasNextLine()) {
+						text += s.nextLine() + "\n";
+					}
+					s.close();
+			
+					Pattern pat = Pattern.compile("(.*)=\"(.*)\";");
+					Matcher mat = pat.matcher(text);
+					
+					while (mat.find()) {
+						hMapLang.put(mat.group(1), mat.group(2));
+					}
+					
+					pat = Pattern.compile("\\|(.*)\\|;");
+					mat = pat.matcher(text);
+					
+					if (mat.find())
+					{
+						System.out.println(mat.group(1));
+						hMapLoc.put(mat.group(1), hMapLang);
+					}
+				}
 			}
 			
 		} catch (Exception e) {
 			ErrorLog.saveError(e);
 		}
+		
 		return null;
 	}
 }
+	
