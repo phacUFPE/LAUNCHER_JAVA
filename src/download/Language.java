@@ -45,7 +45,6 @@ public class Language {
 					
 					if (mat.find())
 					{
-						System.out.println(mat.group(1));
 						hMapLoc.put(mat.group(1), hMapLang);
 					}
 				}
