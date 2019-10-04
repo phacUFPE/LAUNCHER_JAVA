@@ -2,16 +2,20 @@ package download;
 
 import java.io.FileInputStream;
 import java.security.*;
+import java.util.HashMap;
 
 public class Hash {
 	
-	public boolean compareHash(String h1, String h2)
-	{
+	public boolean compareHash(String h1, String h2) {
 		return (h1 == h2);
 	}
 	
-	public String getHash(String path)
-	{
+	public HashMap<String, String> loadHash() {
+		return null;
+	}
+	
+	public String getHash(String path) {
+		
 		StringBuilder sb = new StringBuilder();
 		
 		try {
