@@ -3,29 +3,48 @@ package download;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.Window;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.awt.Font;
+import java.awt.Color;
 
 public class MainWindow {
 
 	private JFrame frame;
 	
 	//public static String webAddress = "http://localhost/updates/";
-	public static String webAddress = "http://swordarteron.com.br/content/client/updates/";
+	public static final String webAddress = "http://swordarteron.com.br/content/client/updates/";
 	
-	public static String rootDir = System.getProperty("user.dir");
+	public static final String rootDir = System.getProperty("user.dir");
+	public static final String langFolder = "lang";
+	public static final String extLang = "lang";
 	
-	public static String fileVersion = "_version";
-	public static String fileConfig = "Config.ini";
+	public static final String fileVersion = "_version";
+	public static final String hashList = "_hlist";
+	public static final String fileConfig = "Config.ini";
 	
-	public static String serverVer = "1";
-	public static String serverMinVer = "1";
+	public static Integer totalFiles;
+	
+	public static String serverVer = "0";
+	public static String serverMinVer = "0";
 	public static String localVer = "0";
 	
 	private static JLabel lblServerVer;
 	private static JLabel lblClientVer;
+	
+	public static HashMap<String, HashMap<String, String>> languages;
+	
+	public static HashMap<String, String> pathMD5files;
 
 	/**
 	 * Launch the application.
@@ -34,13 +53,23 @@ public class MainWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					
 				} catch (Exception e) {
 					ErrorLog.saveError(e);
 				}
 			}
 		});
+		
+		if (!Version.compareSL(serverVer, localVer)) {
+			try {
+				//Thread tDownload = download("http://swordarteron.com.br/content/client/updates/SAOE_DX9.exe", "SAOE_DX9.exe");
+				//tDownload.join(0);
+			} catch (Exception e) {
+				ErrorLog.saveError(e);
+			}
+		} else {
+			//HABILITAR O BOTÃO DO GAME
+		}
 	}
 
 	/**
@@ -48,28 +77,11 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
-		serverVer = Version.getServer(webAddress, fileVersion, "current_ver");
-		serverMinVer = Version.getServer(webAddress, fileVersion, "min_ver");
-		localVer = Version.getLocal(fileConfig);
+		
+		main(null);
 		
 		lblServerVer.setText(String.format("Server Ver: %s", serverVer));
 		lblClientVer.setText(String.format("Client Ver: %s", localVer));
-		
-		if (!Version.compareSL(serverVer, localVer)) {
-			try {
-				//Thread tDownload = download(null, null);
-				//tDownload.join(0);
-			} catch (Exception e) {
-				ErrorLog.saveError(e);
-			}
-		} else {
-			
-		}
-	}
-	
-	public void getWebFiles()
-	{
-		
 	}
 
 	/**
@@ -79,6 +91,7 @@ public class MainWindow {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
 		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(51, 51, 51));
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 650, 400);
 		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
@@ -86,17 +99,21 @@ public class MainWindow {
 		frame.getContentPane().setLayout(null);
 		
 		lblServerVer = new JLabel();
+		lblServerVer.setForeground(Color.GRAY);
+		lblServerVer.setFont(new Font("Yu Gothic UI", Font.BOLD, 11));
 		lblServerVer.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblServerVer.setBounds(514, 327, 120, 15);
 		frame.getContentPane().add(lblServerVer);
 		
 		lblClientVer = new JLabel();
+		lblClientVer.setForeground(Color.GRAY);
+		lblClientVer.setFont(new Font("Yu Gothic UI", Font.BOLD, 11));
 		lblClientVer.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblClientVer.setBounds(514, 346, 120, 15);
 		frame.getContentPane().add(lblClientVer);
 	}
 	
-	private Thread download(String fUrl, String fName) {
+	private static Thread download(String fUrl, String fName) {
 		Thread threadDownload = null;
 		try {
 			threadDownload = new Thread(Download.DownloadFile(fUrl, fName));
@@ -106,5 +123,10 @@ public class MainWindow {
 			ErrorLog.saveError(e);
 		}
 		return threadDownload;
+	}
+
+	public Window getFrame() {
+		// TODO Auto-generated method stub
+		return frame;
 	}
 }

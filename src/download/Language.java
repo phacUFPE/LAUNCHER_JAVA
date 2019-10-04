@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Language {
-	public static HashMap<HashMap<String, String>, String> loadLanguages() {
+	public static HashMap<String, HashMap<String, String>> loadLanguages() {
 
 		HashMap<String, String> hMapLang = new HashMap<String, String>();
 		HashMap<String, HashMap<String, String>> hMapLoc = new HashMap<String, HashMap<String, String>>();
@@ -49,6 +49,10 @@ public class Language {
 					}
 				}
 			}
+			
+			return hMapLoc;
+			
+			
 			
 		} catch (Exception e) {
 			ErrorLog.saveError(e);
