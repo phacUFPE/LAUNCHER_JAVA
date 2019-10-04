@@ -56,11 +56,9 @@ public class LoadWindow {
 		lblLoadingLanguages.setText("Retrieving Files...");
 		getWebFiles(MainWindow.webAddress + MainWindow.hashList);
 					
-		MainWindow mWin = new MainWindow();
-					
 		window.frame.dispose();
-					
-		mWin.getFrame().setVisible(true);
+		
+		MainWindow mWin = new MainWindow();
 	}
 
 	/**

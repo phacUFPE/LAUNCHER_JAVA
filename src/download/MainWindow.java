@@ -20,7 +20,7 @@ import java.awt.Color;
 
 public class MainWindow {
 
-	private JFrame frame;
+	private static JFrame frame;
 	
 	//public static String webAddress = "http://localhost/updates/";
 	public static final String webAddress = "http://swordarteron.com.br/content/client/updates/";
@@ -53,7 +53,10 @@ public class MainWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					lblServerVer.setText(String.format("Server Ver: %s", serverVer));
+					lblClientVer.setText(String.format("Client Ver: %s", localVer));
 					
+					frame.setVisible(true);
 				} catch (Exception e) {
 					ErrorLog.saveError(e);
 				}
@@ -79,9 +82,6 @@ public class MainWindow {
 		initialize();
 		
 		main(null);
-		
-		lblServerVer.setText(String.format("Server Ver: %s", serverVer));
-		lblClientVer.setText(String.format("Client Ver: %s", localVer));
 	}
 
 	/**
