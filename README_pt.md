@@ -1,3 +1,3 @@
-# Launcher_JAVA
+# Launcher_JAVA - Portuguese | Português
 
 ## Mais informações em breve!
