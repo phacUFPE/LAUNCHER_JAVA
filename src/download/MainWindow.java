@@ -4,17 +4,12 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.awt.Font;
 import java.awt.Color;
 
@@ -32,6 +27,9 @@ public class MainWindow {
 	public static final String fileVersion = "_version";
 	public static final String hashList = "_hlist";
 	public static final String fileConfig = "Config.ini";
+	
+	public static String gameEngine = "OPGL";
+	public static String launcherLanguage = "pt";
 	
 	public static Integer totalFiles;
 	
@@ -53,8 +51,8 @@ public class MainWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					lblServerVer.setText(String.format("Server Ver: %s", serverVer));
-					lblClientVer.setText(String.format("Client Ver: %s", localVer));
+					lblServerVer.setText(String.format("Server Ver: %s", (serverVer == null) ? "Undefined" : serverVer));
+					lblClientVer.setText(String.format("Client Ver: %s", (localVer == null) ? "Undefined" : localVer));
 					
 					frame.setVisible(true);
 				} catch (Exception e) {
