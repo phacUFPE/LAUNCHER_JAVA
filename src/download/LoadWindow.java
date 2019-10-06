@@ -9,10 +9,7 @@ import java.awt.Window;
 import java.awt.Window.Type;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Scanner;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,17 +45,17 @@ public class LoadWindow {
 		lblLoadingLanguages.setText("Loading Languages...");
 		MainWindow.languages = Language.loadLanguages();
 		lblLoadingLanguages.setText("Retrieving Server Version...");
-		MainWindow.serverVer = Version.getServer(MainWindow.webAddress, MainWindow.fileVersion, "current_ver");
-		MainWindow.serverMinVer = Version.getServer(MainWindow.webAddress, MainWindow.fileVersion, "min_ver");
+		MainWindow.serverVer = Version.getServer("current_ver");
+		MainWindow.serverMinVer = Version.getServer("min_ver");
 		lblLoadingLanguages.setText("Retrieving Local Version...");
-		MainWindow.localVer = Version.getLocal(MainWindow.fileConfig);
+		MainWindow.localVer = Version.getLocal();
 					
 		lblLoadingLanguages.setText("Retrieving Files...");
 		getWebFiles(MainWindow.webAddress + MainWindow.hashList);
 					
 		window.frame.dispose();
 		
-		MainWindow mWin = new MainWindow();
+		new MainWindow();
 	}
 
 	/**
