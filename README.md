@@ -9,5 +9,4 @@ Welcome to Launcher JAVA Repository, want to know more ? Choose a language and s
 
 **Last image of Launcher**
 
-![]
-(https://raw.githubusercontent.com/phacUFPE/Launcher_JAVA/master/lastImage.png?token=AHWXYOQ3MTTDMJ655N4NZCS5UOGPO)
+![](https://raw.githubusercontent.com/phacUFPE/Launcher_JAVA/master/lastImage.png?token=AHWXYOQ3MTTDMJ655N4NZCS5UOGPO)
