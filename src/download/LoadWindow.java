@@ -51,8 +51,9 @@ public class LoadWindow {
 		MainWindow.localVer = Version.getLocal();
 					
 		lblLoadingLanguages.setText("Retrieving Files...");
-		getWebFiles(MainWindow.webAddress + MainWindow.hashList);
-					
+		MainWindow.totalFiles = Hash.getTotalFiles();
+		MainWindow.pathMD5files = Hash.loadHash();
+		
 		window.frame.dispose();
 		
 		new MainWindow();
@@ -94,39 +95,5 @@ public class LoadWindow {
 	public Window getFrame() {
 		// TODO Auto-generated method stub
 		return frame;
-	}
-	
-	public static void getWebFiles(String address) {
-		try {
-			
-			HashMap<String, String> hm = new HashMap<String, String>();
-			
-			URL url = new URL(address);
-			Scanner s = new Scanner(url.openStream());
-		   
-			String text = "";
-		   
-			while (s.hasNextLine()) {
-				text += s.nextLine() + "\n";
-			}
-			s.close();
-		   
-			Pattern pat = Pattern.compile("file=\"(.*)\", hash=\"(.*)\";");
-			Matcher mat = pat.matcher(text);
-			while (mat.find()) {
-			   	hm.put(mat.group(1), mat.group(2));
-			}
-			
-			MainWindow.pathMD5files = hm;
-		   
-			pat = Pattern.compile("totalfiles=(.*)");
-			mat = pat.matcher(text);
-			if (mat.find()) {
-				MainWindow.totalFiles = Integer.parseInt(mat.group(1));
-			}
-		   
-		} catch(Exception e) {
-			ErrorLog.saveError(e);
-		}
 	}
 }

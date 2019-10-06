@@ -1,8 +1,12 @@
 package download;
 
 import java.io.FileInputStream;
+import java.net.URL;
 import java.security.*;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Hash {
 	
@@ -10,8 +14,58 @@ public class Hash {
 		return (h1 == h2);
 	}
 	
-	public HashMap<String, String> loadHash() {
-		return null;
+	public static Integer getTotalFiles() {
+		
+		try {
+			
+			URL url = new URL(MainWindow.webAddress + MainWindow.hashList);
+			Scanner s = new Scanner(url.openStream());
+		   
+			String text = "";
+		   
+			while (s.hasNextLine()) {
+				text += s.nextLine() + "\n";
+			}
+			s.close();
+		   
+			Pattern pat = Pattern.compile("totalfiles=(.*)");
+			Matcher mat = pat.matcher(text);
+			if (mat.find()) {
+				return Integer.parseInt(mat.group(1));
+			}
+		} catch(Exception e) {
+			ErrorLog.saveError(e);
+		}
+		
+		return 0;
+	}
+	
+	public static HashMap<String, String> loadHash() {	
+		
+		HashMap<String, String> hList = new HashMap<String, String>();
+		
+		try {
+			
+			URL url = new URL(MainWindow.webAddress + MainWindow.hashList);
+			Scanner s = new Scanner(url.openStream());
+		   
+			String text = "";
+		   
+			while (s.hasNextLine()) {
+				text += s.nextLine() + "\n";
+			}
+			s.close();
+		   
+			Pattern pat = Pattern.compile("file=\"(.*)\", hash=\"(.*)\";");
+			Matcher mat = pat.matcher(text);
+			while (mat.find()) {
+				hList.put(mat.group(1), mat.group(2));
+			}
+		} catch(Exception e) {
+			ErrorLog.saveError(e);
+		}
+		
+		return hList;
 	}
 	
 	public String getHash(String path) {
