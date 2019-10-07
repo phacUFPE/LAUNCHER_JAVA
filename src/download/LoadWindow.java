@@ -22,7 +22,6 @@ public class LoadWindow {
 
 	/**
 	 * Launch the application.
-	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		EventQueue.invokeLater(new Runnable() {
@@ -56,6 +55,7 @@ public class LoadWindow {
 
 	/**
 	 * Create the application.
+	 * @throws InterruptedException 
 	 */
 	public LoadWindow() {
 		initialize();

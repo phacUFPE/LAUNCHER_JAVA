@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +22,9 @@ public class MainWindow {
 	static JLabel lblTotal = new JLabel("Total");
 	static JLabel lblFile = new JLabel("File");
 	static JLabel lblDownloading = new JLabel("Downloading:");
+	static JLabel lblProgressTotalFull = new JLabel("");
+	static JLabel lblBytes = new JLabel("Bytes");
+	static JLabel lblCount = new JLabel("Count");
 	
 	//public static String webAddress = "http://localhost/updates/";
 	public static final String webAddress = "http://swordarteron.com.br/content/client/updates/";
@@ -33,10 +37,13 @@ public class MainWindow {
 	public static final String hashList = "_hlist";
 	public static final String fileConfig = "Config.ini";
 	
+	public static final Integer pgWidth = 425;
+	
 	public static String gameEngine = "OPGL";
 	public static String launcherLanguage = "PORTUGUESE";
 	
 	public static Integer totalFiles;
+	public static Integer filesDownloaded = 1;
 	public static String fileDownloading;
 	
 	public static String serverVer = "0";
@@ -72,6 +79,51 @@ public class MainWindow {
 		lblDownloading.setForeground(color);
 	}
 	
+	public static void prepareLabelsDownload(boolean visible) {
+		lblDownloading.setVisible(visible);
+		lblCount.setVisible(visible);
+		lblBytes.setVisible(visible);
+	}
+	
+	public static Runnable changeLabelsDownload(boolean checkingFiles, double percentTotal) {
+		if (checkingFiles) { lblDownloading.setText(languages.get(launcherLanguage).get("CHECK_FILES")); } else 
+		{ lblDownloading.setText(String.format("%s %s", languages.get(launcherLanguage).get("DOWNLOADING"), fileDownloading)); }
+		lblProgressTotalFull.setSize((int)Math.round((double)(pgWidth * 0.01) * percentTotal), lblProgressTotalFull.getHeight());
+		lblCount.setText(String.format("%s/%s", filesDownloaded, totalFiles));
+		return null;
+	}
+	
+	public static void prepareToDownload(boolean checkHash) {
+		try {
+			for (HashMap.Entry<String, String> entry : pathMD5files.entrySet()) {
+				String[] aboutFile = entry.getKey().split("\\\\");
+				String pathWeb = entry.getKey().replace("\\", "/");
+				String fileName = aboutFile[aboutFile.length - 1];
+				String pathDesk = entry.getKey().replace(fileName, "");
+				File dir = new File(String.format("%s\\%s", rootDir, pathDesk));
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				double div = (double)filesDownloaded/(double)totalFiles; 
+				double percent = div * 100;
+				String hash = Hash.getHash(String.format("%s\\%s", rootDir, pathDesk + fileName));
+				if (hash == null || entry.getValue().compareTo(hash) != 0) {
+					fileDownloading = fileName;
+					new Thread(changeLabelsDownload(false, percent));
+					Thread tDownload = download(String.format("%s%s", webAddress, pathWeb.replace(" ", "%20")), pathDesk, fileName);
+					tDownload.join(0);
+					filesDownloaded += 1;
+				} else {
+					new Thread(changeLabelsDownload(true, percent));
+					filesDownloaded += 1;
+					continue;
+				}
+			}
+		} catch (Exception e) {
+			ErrorLog.saveError(e);
+		}
+	}
+	
 	public static void main(String[] args) {
 		
 		changeLabelsLanguage();
@@ -90,15 +142,22 @@ public class MainWindow {
 			}
 		});
 		
-		if (!Version.compareSL(serverVer, localVer)) {
-			try {
-				//Thread tDownload = download("http://swordarteron.com.br/content/client/updates/SAOE_DX9.exe", "SAOE_DX9.exe");
-				//tDownload.join(0);
-			} catch (Exception e) {
-				ErrorLog.saveError(e);
+		try {
+			prepareLabelsDownload(true);
+			if (localVer.compareTo(serverMinVer) >= 0) {
+				if (localVer.compareTo(serverVer) == 0) {
+					try {
+						prepareToDownload(true);
+					} catch (Exception e) {
+						ErrorLog.saveError(e);
+					}
+				}
+			} else {
+				prepareToDownload(false);
 			}
-		} else {
-			//HABILITAR O BOTÃO DO GAME
+			prepareLabelsDownload(false);
+		} catch (Exception e) {
+			ErrorLog.saveError(e);
 		}
 	}
 
@@ -154,7 +213,6 @@ public class MainWindow {
 		lblProgressFileEmpty.setBounds(95, 270, 425, 15);
 		frame.getContentPane().add(lblProgressFileEmpty);
 		
-		JLabel lblProgressTotalFull = new JLabel("");
 		lblProgressTotalFull.setIcon(new ImageIcon(MainWindow.class.getResource("/images/healthbar_full_425x15.png")));
 		lblProgressTotalFull.setHorizontalAlignment(SwingConstants.LEFT);
 		lblProgressTotalFull.setForeground(Color.WHITE);
@@ -187,12 +245,17 @@ public class MainWindow {
 		frame.getContentPane().add(lblDownloading);
 		lblDownloading.setVisible(false);
 		
-		JLabel lblBytes = new JLabel("Bytes");
 		lblBytes.setForeground(SystemColor.inactiveCaptionBorder);
 		lblBytes.setFont(new Font("Yu Gothic UI", Font.BOLD, 12));
 		lblBytes.setBounds(98, 327, 135, 15);
 		frame.getContentPane().add(lblBytes);
 		lblBytes.setVisible(false);
+		
+		lblCount.setForeground(SystemColor.inactiveCaptionBorder);
+		lblCount.setFont(new Font("Yu Gothic UI", Font.BOLD, 12));
+		lblCount.setBounds(243, 328, 112, 15);
+		frame.getContentPane().add(lblCount);
+		lblCount.setVisible(false);
 		
 		JLabel lblBackgroundImage = new JLabel("");
 		lblBackgroundImage.setIcon(new ImageIcon(MainWindow.class.getResource("/images/bg_saoe_644x371.png")));
@@ -200,10 +263,10 @@ public class MainWindow {
 		frame.getContentPane().add(lblBackgroundImage);
 	}
 	
-	private static Thread download(String fUrl, String fName) {
+	private static Thread download(String fUrl, String pathDesk, String fName) {
 		Thread threadDownload = null;
 		try {
-			threadDownload = new Thread(Download.DownloadFile(fUrl, fName));
+			threadDownload = new Thread(Download.DownloadFile(fUrl, pathDesk, fName));
 			threadDownload.start();
 			
 		} catch (Exception e) {
