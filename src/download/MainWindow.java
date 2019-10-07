@@ -23,8 +23,9 @@ public class MainWindow {
 	static JLabel lblFile = new JLabel("File");
 	static JLabel lblDownloading = new JLabel("Downloading:");
 	static JLabel lblProgressTotalFull = new JLabel("");
-	static JLabel lblBytes = new JLabel("Bytes");
-	static JLabel lblCount = new JLabel("Count");
+	static JLabel lblProgressFileFull = new JLabel("");
+	static JLabel lblBytes = new JLabel("");
+	static JLabel lblCount = new JLabel("");
 	
 	//public static String webAddress = "http://localhost/updates/";
 	public static final String webAddress = "http://swordarteron.com.br/content/client/updates/";
@@ -155,7 +156,11 @@ public class MainWindow {
 			} else {
 				prepareToDownload(false);
 			}
+			localVer = serverVer; 
+			lblProgressTotalFull.setSize(pgWidth, lblProgressTotalFull.getHeight());
+			lblProgressFileFull.setSize(pgWidth, lblProgressFileFull.getHeight());
 			prepareLabelsDownload(false);
+			
 		} catch (Exception e) {
 			ErrorLog.saveError(e);
 		}
@@ -199,11 +204,10 @@ public class MainWindow {
 		lblClientVer.setBounds(514, 346, 120, 15);
 		frame.getContentPane().add(lblClientVer);
 		
-		JLabel lblProgressFileFull = new JLabel("");
 		lblProgressFileFull.setIcon(new ImageIcon(MainWindow.class.getResource("/images/healthbar_full_425x15.png")));
 		lblProgressFileFull.setHorizontalAlignment(SwingConstants.LEFT);
 		lblProgressFileFull.setForeground(Color.WHITE);
-		lblProgressFileFull.setBounds(95, 270, 425, 15);
+		lblProgressFileFull.setBounds(95, 270, 0, 15);
 		frame.getContentPane().add(lblProgressFileFull);
 		
 		JLabel lblProgressFileEmpty = new JLabel("");
@@ -216,7 +220,7 @@ public class MainWindow {
 		lblProgressTotalFull.setIcon(new ImageIcon(MainWindow.class.getResource("/images/healthbar_full_425x15.png")));
 		lblProgressTotalFull.setHorizontalAlignment(SwingConstants.LEFT);
 		lblProgressTotalFull.setForeground(Color.WHITE);
-		lblProgressTotalFull.setBounds(95, 288, 425, 15);
+		lblProgressTotalFull.setBounds(95, 288, 0, 15);
 		frame.getContentPane().add(lblProgressTotalFull);
 		
 		JLabel lblProgressTotalEmpty = new JLabel("");
