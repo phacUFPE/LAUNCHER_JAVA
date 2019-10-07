@@ -9,11 +9,6 @@ import java.util.regex.*;
 
 public class Version {
 	
-	public static boolean compareSL(String sVer, String lVer) {
-		if (sVer == null || lVer == null) { return false; }
-		return (sVer.compareTo(lVer) == 0);
-	}
-	
 	public static String getServer(String sMatch) {
 		MatchResult result = null;
 		try {
